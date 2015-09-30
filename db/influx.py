@@ -1,7 +1,7 @@
 from influxdb import InfluxDBClient
 from utils.config import INFLUX_DB_PASSWORD,INFLUX_DB_PORT,INFLUX_DB_SERVER,INFLUX_DB_TABLE,INFLUX_DB_USER
 from copy import deepcopy
-
+from utils.logger import master_log
 
 """
 An standard datapoint object
@@ -33,10 +33,15 @@ class DataServer(object):
         :param passwd: password
         :return:
         """
+        self.log = master_log.name(__name__)
+
         try:
-            self.server = InfluxDBClient(server,port,user,passwd,table)
+            self.log.debug("Connecting to" + server)
+            self.server = InfluxDBClient(server, port, user, passwd, table)
+            self.log.debug("Connected to" + server)
         except Exception as e:
-            raise Exception("Unable to connect to {}:{} with {}".format(server, port, user) + e.message)
+            reason = str(e)
+            raise Exception("Unable to connect to {}:{} with {}.{}".format(server, port, user, reason))
 
     def add_datapoint(self, measurement,value,  board, tags=None):
         datapoint = deepcopy(DATAPOINT)
@@ -47,7 +52,9 @@ class DataServer(object):
             for tag, value in tags:
                 datapoint['tags'][tag] = value
         try:
+            self.log.debug("Writting to InfluxDB: {}-{}".format(measurement,value))
             result = self.server.write_points([datapoint])
         except Exception as e:
-            raise Exception("Unable to write {}".format(datapoint) + "\n" + e.message)
+            reason = str(e)
+            raise Exception("Unable to write {} due to {}".format(datapoint, reason))
         return result

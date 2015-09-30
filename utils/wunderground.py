@@ -1,7 +1,9 @@
+#!/usr/bin/env python
 import urllib2
 import json
 from db.influx import DataServer
-
+from utils.logger import master_log
+log = master_log.name(__name__)
 data_points = []
 current_dataset = {
     'temp': 'temp_c',
@@ -24,15 +26,15 @@ for field, value in current_dataset.iteritems():
         measurement_value = float(parsed_json['current_observation'][value])
     except ValueError:
         measurement_value = float(parsed_json['current_observation'][value].strip('%'))
-    server.add_datapoint(field, measurement_value, 'wunderground')
+    log.debug("{} written".format(field)) if server.add_datapoint(field, measurement_value, 'wunderground') else None
 
 current.close()
 forecast = urllib2.urlopen(
     'http://api.wunderground.com/api/9fe997a4e78bd9cc/forecast/q/zmw:00000.1.87344.json')
 parsed_forecast = json.loads(forecast.read())
 for a_forecast in parsed_forecast['forecast']['simpleforecast']['forecastday']:
-    server.add_datapoint('rain_forecast', float(a_forecast['pop']), 'wunderground', tags="{}-{}-{}".format(
+    log.debug("Forecast written") if  server.add_datapoint('rain_forecast', float(a_forecast['pop']), 'wunderground', tags="{}-{}-{}".format(
         a_forecast['date']['year'],
         a_forecast['date']['month'],
-        a_forecast['date']['day']))
+        a_forecast['date']['day'])) else None
 forecast.close()

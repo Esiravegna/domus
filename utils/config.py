@@ -3,7 +3,7 @@ import os
 """
 Influx db
 """
-INFLUX_DB_SERVER = os.getenv("", "localhost")
+INFLUX_DB_SERVER = os.getenv("DOMUS_INFLUX_DB_SERVER", "localhost")
 INFLUX_DB_PORT = os.getenv("DOMUS_INFLUX_DB_PORT", 8086)
 INFLUX_DB_USER = os.getenv("DOMUS_INFLUX_DB_USER", "user")
 INFLUX_DB_PASSWORD = os.getenv("DOMUS_INFLUX_DB_PASSWORD", "password")
