@@ -1,4 +1,4 @@
-THRESHOLDS =
+THRESHOLDS = []
 
 class Forecast(object):
     """
