@@ -49,7 +49,7 @@ class DataServer(object):
         datapoint['fields']['value'] = value
         datapoint['tags']['board'] = board
         if tags and isinstance(tags,dict):
-            for tag, value in tags:
+            for tag, value in tags.iteritems():
                 datapoint['tags'][tag] = value
         try:
             self.log.debug("Writting to InfluxDB: {}-{}".format(measurement,value))
@@ -58,3 +58,6 @@ class DataServer(object):
             reason = str(e)
             raise Exception("Unable to write {} due to {}".format(datapoint, reason))
         return result
+
+    def query(self,query):
+        return self.server.query(query)

@@ -33,8 +33,11 @@ forecast = urllib2.urlopen(
     'http://api.wunderground.com/api/9fe997a4e78bd9cc/forecast/q/zmw:00000.1.87344.json')
 parsed_forecast = json.loads(forecast.read())
 for a_forecast in parsed_forecast['forecast']['simpleforecast']['forecastday']:
-    log.debug("Forecast written") if  server.add_datapoint('rain_forecast', float(a_forecast['pop']), 'wunderground', tags="{}-{}-{}".format(
-        a_forecast['date']['year'],
-        a_forecast['date']['month'],
-        a_forecast['date']['day'])) else None
+    forecast_for =  "{}-{}-{}".format(
+            a_forecast['date']['year'],
+            a_forecast['date']['month'],
+            a_forecast['date']['day'])
+    log.debug("Rain forecast written") if  server.add_datapoint('rain_forecast', float(a_forecast['pop']), 'wunderground', tags={"forecast_for": forecast_for}) else None
+    log.debug("Max forecast written") if  server.add_datapoint('max', float(a_forecast['high']['celsius']), 'wunderground', tags={"forecast_for": forecast_for}) else None
+    log.debug("Min forecast written") if  server.add_datapoint('min', float(a_forecast['low']['celsius']), 'wunderground', tags={"forecast_for": forecast_for}) else None
 forecast.close()
