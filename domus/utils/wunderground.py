@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 import urllib2
 import json
-from db.influx import DataServer
-from utils.logger import master_log
+
+from domus.db.influx import DataServer
+from domus.utils import master_log
+
 log = master_log.name(__name__)
 data_points = []
 current_dataset = {

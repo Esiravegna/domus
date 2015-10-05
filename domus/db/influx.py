@@ -1,6 +1,7 @@
-from influxdb import InfluxDBClient
-from utils.config import INFLUX_DB_PASSWORD,INFLUX_DB_PORT,INFLUX_DB_SERVER,INFLUX_DB_TABLE,INFLUX_DB_USER
 from copy import deepcopy
+
+from influxdb import InfluxDBClient
+from domus.utils.config import INFLUX_DB_PASSWORD,INFLUX_DB_PORT,INFLUX_DB_SERVER,INFLUX_DB_TABLE,INFLUX_DB_USER
 from utils.logger import master_log
 
 """
