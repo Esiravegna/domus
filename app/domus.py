@@ -17,7 +17,7 @@ application.config.from_pyfile('domus.cfg')
 db = flask.ext.sqlalchemy.SQLAlchemy(application)
 
 class Alert(db.Model):
-    __tablename__ = 'alerts'
+    __tablename__ = 'jobs'
     id = db.Column('id', db.Integer, primary_key=True)
     board = db.Column(db.String(255))
     who = db.Column(db.String(255))

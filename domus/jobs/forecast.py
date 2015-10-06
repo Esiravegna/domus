@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 import datetime
 from emoji import emojize
+from domus.utils.logger import master_log
+log = master_log.name(__name__)
+
 RAIN_THRESHOLD = {
-    u'es improbable que llueva': (0, 40),
+    u'no llueve': (0, 40),
     emojize(u'va a llover :umbrella:'): (75, 100),
     u'puede llover': (40, 74)
     }
@@ -21,6 +24,7 @@ class Forecast(object):
         """
         self.server = data_server
         self.twitter = twitter_client
+        log.debug("Forecast class created")
 
     def __forecast_to_message(self, threshold, when=0, measurement='rain_forecast'):
         """
@@ -48,11 +52,12 @@ class Forecast(object):
     def __call__(self):
         result = False
         current_time = datetime.datetime.now().hour
+        log.debug("Getting forecast")
         today = self.__forecast_to_message(RAIN_THRESHOLD)
         tomorrow = self.__forecast_to_message(RAIN_THRESHOLD, when=1)
-        if today and tomorrow:
-            tweet_response = u"Hoy " if current_time <= 12 else u"Esta tarde "
-            tomorrow = "lo mismo" if today == tomorrow else tomorrow
-            tweet_response = tweet_response + u"{}. Mañana, {}".format(today,tomorrow)
-            result = self.twitter.tweet(tweet_response)
+        tweet_response = u"Hoy " if current_time <= 12 else u"Esta tarde "
+        tomorrow = "lo mismo" if today == tomorrow else tomorrow
+        log.debug("Tweeting forecast")
+        tweet_response = tweet_response + u"{}. Mañana, {}".format(today,tomorrow)
+        result = self.twitter.tweet(tweet_response)
         return result

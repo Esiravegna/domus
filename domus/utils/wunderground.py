@@ -3,7 +3,7 @@ import urllib2
 import json
 
 from domus.db.influx import DataServer
-from domus.utils import master_log
+from domus.utils.logger import master_log
 
 log = master_log.name(__name__)
 data_points = []
@@ -39,7 +39,7 @@ for a_forecast in parsed_forecast['forecast']['simpleforecast']['forecastday']:
             a_forecast['date']['year'],
             a_forecast['date']['month'],
             a_forecast['date']['day'])
-    log.debug("Rain forecast written") if  server.add_datapoint('rain_forecast', float(a_forecast['pop']), 'wunderground', tags={"forecast_for": forecast_for}) else None
-    log.debug("Max forecast written") if  server.add_datapoint('max', float(a_forecast['high']['celsius']), 'wunderground', tags={"forecast_for": forecast_for}) else None
-    log.debug("Min forecast written") if  server.add_datapoint('min', float(a_forecast['low']['celsius']), 'wunderground', tags={"forecast_for": forecast_for}) else None
+    log.debug("Rain forecast written") if server.add_datapoint('rain_forecast', float(a_forecast['pop']), 'wunderground', tags={"forecast_for": forecast_for}) else None
+    log.debug("Max forecast written") if server.add_datapoint('max', float(a_forecast['high']['celsius']), 'wunderground', tags={"forecast_for": forecast_for}) else None
+    log.debug("Min forecast written") if server.add_datapoint('min', float(a_forecast['low']['celsius']), 'wunderground', tags={"forecast_for": forecast_for}) else None
 forecast.close()
