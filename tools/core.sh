@@ -5,4 +5,4 @@ export PYTHONPATH=$PYTHONPATH:`pwd`
 source venv/bin/activate
 #environmental variables
 source venv/bin/settings
-python -m domus.core >> /var/domus/domus.log
+python -m domus.core >> /var/log/domus/domus.log
