@@ -44,7 +44,7 @@ class DataServer(object):
             reason = str(e)
             raise Exception("Unable to connect to {}:{} with {}.{}".format(server, port, user, reason))
 
-    def add_datapoint(self, measurement,value,  board, tags=None):
+    def add_datapoint(self, measurement, value, board, tags=None,):
         datapoint = deepcopy(DATAPOINT)
         datapoint['measurement'] = measurement
         datapoint['fields']['value'] = value

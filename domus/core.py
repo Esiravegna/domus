@@ -5,7 +5,6 @@ from apscheduler.schedulers.background import BlockingScheduler
 from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
 from apscheduler.executors.pool import ThreadPoolExecutor, ProcessPoolExecutor
 from pytz import timezone
-from domus.db.jobs import JOB_STORAGE
 from domus.utils.logger import master_log
 log = master_log.name("DOMUS " + __name__)
 from domus.db.jobs import JOB_STORAGE

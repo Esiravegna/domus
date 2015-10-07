@@ -34,8 +34,7 @@ class Wunderground(object):
             self.log.debug("{} written".format(field)) if self.server.add_datapoint(field, measurement_value, 'wunderground') else None
 
         current.close()
-        forecast = urllib2.urlopen(
-            'http://api.wunderground.com/api/9fe997a4e78bd9cc/forecast/q/zmw:00000.1.87344.json')
+        forecast = urllib2.urlopen('http://api.wunderground.com/api/9fe997a4e78bd9cc/forecast/q/zmw:00000.1.87344.json')
         parsed_forecast = json.loads(forecast.read())
         for a_forecast in parsed_forecast['forecast']['simpleforecast']['forecastday']:
             forecast_for = "{}-{}-{}".format(
@@ -45,4 +44,5 @@ class Wunderground(object):
             self.log.debug("Rain forecast written") if self.server.add_datapoint('rain_forecast', float(a_forecast['pop']), 'wunderground', tags={"forecast_for": forecast_for}) else None
             self.log.debug("Max forecast written") if self.server.add_datapoint('max', float(a_forecast['high']['celsius']), 'wunderground', tags={"forecast_for": forecast_for}) else None
             self.log.debug("Min forecast written") if self.server.add_datapoint('min', float(a_forecast['low']['celsius']), 'wunderground', tags={"forecast_for": forecast_for}) else None
+            self.log.debug("Condition written") if self.server.add_datapoint('cond', (a_forecast['icon']), 'wunderground', tags={"forecast_for": forecast_for}) else None
         forecast.close()
