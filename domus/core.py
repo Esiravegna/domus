@@ -20,11 +20,8 @@ twitter_client = Tweety()
 wunder = Wunderground(data_storage)
 forecast = Forecast(data_storage, twitter_client)
 
-def cache_data():
-    wunder()
-
-def do_forecast():
-    forecast()
+cache_data = wunder.run
+do_forecast = forecast.run
 
 
 if __name__ == '__main__':

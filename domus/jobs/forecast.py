@@ -49,7 +49,7 @@ class Forecast(object):
             raise Exception("Unable to connect to the dataserver")
         return message
 
-    def __call__(self):
+    def run(self):
         result = False
         current_time = datetime.datetime.now().hour
         log.debug("Getting forecast")

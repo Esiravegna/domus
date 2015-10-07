@@ -20,7 +20,7 @@ class Wunderground(object):
         }
         self.log.debug("Forecast class created")
 
-    def __call__(self, *args, **kwargs):
+    def run(self):
         current = urllib2.urlopen(
             'http://api.wunderground.com/api/9fe997a4e78bd9cc/conditions/q/zmw:00000.1.87344.json')
         json_string = current.read()
