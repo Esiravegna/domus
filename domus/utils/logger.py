@@ -1,3 +1,3 @@
 import twiggy
-twiggy.quickSetup()
+twiggy.quick_setup()
 master_log = twiggy.log
