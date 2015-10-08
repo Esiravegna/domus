@@ -9,7 +9,7 @@ from domus.utils.logger import master_log
 log = master_log.name("DOMUS " + __name__)
 from domus.db.jobs import JOB_STORAGE
 from domus.db.influx import DataServer
-from domus.utils.twitter import Tweety
+from domus.twitter.tweety import Tweety
 from domus.jobs.forecast import Forecast
 from domus.jobs.wunderground import Wunderground
 

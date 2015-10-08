@@ -124,5 +124,5 @@ class Forecast(object):
         log.debug("Tweeting forecast")
         tweet_response = tweet_response + u"{0}.Se esperan {1} y {2}.".format(rain[0], temp[0], condition[0])
         tweet_response = tweet_response + u"\nMañana {0}.Se esperan {1} y {2}.".format(rain[0], temp[0], condition[0])
-        result = self.twitter.tweet(tweet_response)
+        result = self.twitter.tweet(tweet_response, to_friends=True)
         return result
