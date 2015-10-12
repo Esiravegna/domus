@@ -54,6 +54,7 @@ class DataServer(object):
                 datapoint['tags'][tag] = value
         try:
             self.log.debug("Writting to InfluxDB: {}-{}".format(measurement,value))
+            self.log.debug("Writting {0}",datapoint)
             result = self.server.write_points([datapoint])
         except Exception as e:
             reason = str(e)
