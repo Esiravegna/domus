@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 import sys
-
+## HORRID HACK. REDO.
 reload(sys)
 sys.setdefaultencoding('utf8')
+
 import datetime
 from emoji import emojize
 from domus.utils.logger import master_log
@@ -26,10 +27,10 @@ CONDITION_TO_EMOJI ={
     u'flurries':u':snowflake:',
     u'fog':u':foggy:',
     u'hazy':u':foggy:',
-    u'mostlycloudy':u':cloud:',
-    u'mostlysunny':u':sunny:',
-    u'partlycloudy':u':cloud:',
-    u'partlysunny':u':sunny:',
+    u'mostlycloudy': u':cloud:',
+    u'mostlysunny': u':sunny:',
+    u'partlycloudy': u':cloud:',
+    u'partlysunny': u':sunny:',
     u'sleet':u':sonwflake:',
     u'rain':u':umbrella:',
     u'snow':u':snowflake:',
@@ -52,7 +53,8 @@ class Forecast(object):
         """
         self.server = data_server
         self.twitter = twitter_client
-        log.debug("Forecast class created")
+        self.log = master_log.name(__name__)
+        self.log.debug("Forecast class created")
 
     def __forecast_to_message(self, threshold, when=0, measurement='rain_forecast'):
         """
@@ -62,13 +64,14 @@ class Forecast(object):
         :param measurement The measurement to be queried, rain_forecast as the default.
         :return: a proper twitteable string.
         """
-        query = "SELECT value FROM {}".format(measurement) +\
-                " WHERE board='wunderground' AND forecast_for = '{dt.year}-{dt.month}-{dt.day}' " \
-                " ORDER BY time desc LIMIT 1".format( dt=datetime.datetime.now() + datetime.timedelta(days=when))
+        query = "SELECT last(value) FROM {}".format(measurement) +\
+                " WHERE board='wunderground' AND forecast_for =~ /{dt.year}-{dt.month}-{dt.day}/ "\
+                .format(dt=datetime.datetime.now() + datetime.timedelta(days=when))
+        self.log.debug("Query to run: {0}",query)
         message = False
         try:
             rs = self.server.query(query)
-            forecast = list(rs.get_points(measurement=measurement))[0]['value']
+            forecast = list(rs.get_points(measurement=measurement))[0]['last']
             for key, value in threshold.iteritems():
                 if value[0] <= forecast <= value[1]:
                     message = key + u" ({}%)".format(forecast)
@@ -85,15 +88,16 @@ class Forecast(object):
         """
         measurements =[]
         for measurement in ['max', 'min']:
-            query = "SELECT value FROM {}".format(measurement) +\
-                    " WHERE board='wunderground' AND forecast_for = '{dt.year}-{dt.month}-{dt.day}' " \
-                    " ORDER BY time desc LIMIT 1".format(dt=datetime.datetime.now() + datetime.timedelta(days=when))
+            query = "SELECT last(value) FROM {}".format(measurement) + \
+                    " WHERE board='wunderground' AND forecast_for =~ /{dt.year}-{dt.month}-{dt.day}/"\
+                    .format(dt=datetime.datetime.now() + datetime.timedelta(days=when))
+            self.log.debug("Query to run: {0}",query)
             try:
                 rs = self.server.query(query)
-                measurements.append(list(rs.get_points(measurement=measurement))[0]['value'])
+                measurements.append(list(rs.get_points(measurement=measurement))[0]['last'])
             except ValueError:
                 raise Exception("Unable to connect to the dataserver")
-        message = emojize(":arrow_up:{}°/:arrow_down:{}°".format(measurements[0],measurements[1]),use_aliases=True)
+        message = emojize(":arrow_up:{}°/:arrow_down:{}°".format(measurements[0], measurements[1]),use_aliases=True)
         return message
 
     def __condition(self,when=0):
@@ -102,21 +106,21 @@ class Forecast(object):
         when: 0 for today, 1 for tomorrow and so on
         :return: a proper twittable string
         """
-        query = "SELECT value FROM cond" +\
-                " WHERE board='wunderground' AND forecast_for = '{dt.year}-{dt.month}-{dt.day}' " \
-                " ORDER BY time desc LIMIT 1".format(dt=datetime.datetime.now() + datetime.timedelta(days=when))
+        query = "SELECT last(value) FROM cond WHERE board='wunderground' " \
+                "AND forecast_for =~ /{dt.year}-{dt.month}-{dt.day}/ "\
+            .format(dt=datetime.datetime.now() + datetime.timedelta(days=when))
+        self.log.debug("Query to run: {0}",query)
         cond = False
         try:
             rs = self.server.query(query)
-            cond =  emojize(CONDITION_TO_EMOJI[list(rs.get_points(measurement='cond'))[0]['value']])
+            cond = emojize(CONDITION_TO_EMOJI[list(rs.get_points(measurement='cond'))[0]['last']],use_aliases=True)
         except ValueError:
             raise Exception("Unable to connect to the dataserver")
         return cond
 
     def run(self):
         result = False
-        current_time = datetime.datetime.now().hour
-        log.debug("Getting forecast")
+        self.log.debug("Getting forecast")
         rain = [self.__forecast_to_message(RAIN_THRESHOLD), self.__forecast_to_message(RAIN_THRESHOLD, when=1)]
         condition = [self.__condition(),self.__condition(when=1)]
         temp = [self.__min_max_message(),self.__min_max_message(when=1)]
