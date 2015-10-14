@@ -1,4 +1,6 @@
 Flask==0.10.1
+Flask-Restless>= 0.15
+Flask-SQLAlchemy>=1.0
 SQLAlchemy==1.0.8
 twython==3.3.0
 influxdb==2.9.1

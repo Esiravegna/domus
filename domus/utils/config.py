@@ -8,6 +8,12 @@ INFLUX_DB_PORT = os.getenv("DOMUS_INFLUX_DB_PORT", 8086)
 INFLUX_DB_USER = os.getenv("DOMUS_INFLUX_DB_USER", "user").rstrip()
 INFLUX_DB_PASSWORD = os.getenv("DOMUS_INFLUX_DB_PASSWORD", "password").rstrip()
 INFLUX_DB_TABLE = os.getenv("DOMUS_INFLUX_DB_TABLE", "domus").rstrip()
+"""
+MySQL DB
+"""
+MYSQL_DB_SERVER = os.getenv("MYSQL_DB_SERVER", "localhost").rstrip()
+MYSQL_DB_USER = os.getenv("MYSQL_DB_USER", "localhost").rstrip()
+MYSQL_DB_PASS = os.getenv("MYSQL_DB_PASS", "localhost").rstrip()
 
 
 """

@@ -16,7 +16,8 @@ class Wunderground(object):
             'humidity': 'relative_humidity',
             'feelslike': 'feelslike_c',
             'wind_direction': 'wind_degrees',
-            'wind_speed': 'wind_kph'
+            'wind_gusts'    : 'wind_gust_kph',
+            'wind_speed'    : 'wind_kph'
         }
         self.log.debug("Forecast class created")
 
