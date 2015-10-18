@@ -67,7 +67,6 @@ class Forecast(object):
         query = "SELECT last(value) FROM {}".format(measurement) +\
                 " WHERE board='wunderground' AND forecast_for =~ /{dt.year}-{dt.month}-{dt.day}/ "\
                 .format(dt=datetime.datetime.now() + datetime.timedelta(days=when))
-        self.log.debug("Query to run: {0}",query)
         message = False
         try:
             rs = self.server.query(query)
