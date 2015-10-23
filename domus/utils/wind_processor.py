@@ -27,7 +27,7 @@ def direction(direction):
     :return: N, S, and so on
     """
     for key, value in DIRECTIONS.iteritems():
-        if value[0] <= direction <= value[1]:
+        if value[0] >= direction <= value[1]:
             return key
 
 
