@@ -8,6 +8,8 @@ import datetime
 from emoji import emojize
 from domus.utils.logger import master_log
 log = master_log.name(__name__)
+from domus.utils.cache import RedisCache
+
 
 RAIN_THRESHOLD = {
     u'no llueve': (0, 40),
@@ -55,6 +57,7 @@ class Forecast(object):
         self.twitter = twitter_client
         self.log = master_log.name(__name__)
         self.log.debug("Forecast class created")
+        self.cache = RedisCache()
 
     def __forecast_to_message(self, threshold, when=0, measurement='rain_forecast'):
         """
@@ -67,7 +70,6 @@ class Forecast(object):
         query = "SELECT last(value) FROM {}".format(measurement) +\
                 " WHERE board='wunderground' AND forecast_for =~ /{dt.year}-{dt.month}-{dt.day}/ "\
                 .format(dt=datetime.datetime.now() + datetime.timedelta(days=when))
-        self.log.debug("Query to run: {0}",query)
         message = False
         try:
             rs = self.server.query(query)
