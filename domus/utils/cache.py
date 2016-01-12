@@ -5,7 +5,7 @@ log = master_log.name("DOMUS " + __name__)
 
 class RedisCache(object):
 
-    def __init__(self, params):
+    def __init__(self, params={}):
         self._validate(params)
 
         if not self.server:
@@ -57,7 +57,7 @@ class RedisCache(object):
         self.server = params.get('server', 'localhost')
         self.port = params.get('port', 6379)
         self.database = params.get('database', 2)
-        self.key_prefix = params.get('key_prefix', 'mltools')
+        self.key_prefix = params.get('key_prefix', 'domus')
 
     def _create_key(self, key):
         return "%s.%s" % (self.key_prefix, key)
